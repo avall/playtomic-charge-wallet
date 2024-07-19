@@ -1,0 +1,81 @@
+@startuml
+actor Customer
+participant "MS-Wallet" as Server
+participant "MS-Payment\nGateway" as PaymentGateway
+participant "Database" as Database
+
+Customer --> Server: Charge wallet\nrequest
+activate Server
+Server --> Database: Validate wallet exists
+activate Database
+
+alt Wallet exists
+    Database --> Server: Ok
+    deactivate Database
+
+    Server --> Database: Create PENDING\ntransaction
+    activate Database
+    note right
+      The transaction is a database entity
+      that is very useful to recover
+      the system when failures occur.
+    end note
+
+    alt Transaction Created
+        Database --> Server: Db Commit OK
+        deactivate Database
+        Server --> PaymentGateway: Charge creditcard
+        activate PaymentGateway
+
+        alt Success charge (200)
+            PaymentGateway --> Server: 200
+            deactivate PaymentGateway
+
+            Server --> Database: Update wallet\nbalance
+            activate Database
+
+            alt SQL commit OK\n(update balance)
+                Database --> Server: Ok
+                deactivate Database
+
+                Server --> Database: Update transaction\nto COMPLETED
+                activate Database
+                Database --> Server
+                deactivate Database
+
+                Server --> Customer: 200
+            else SQL failed\n(update balance)
+                Database --> Server: Exception
+                deactivate Database
+
+                Server --> Database: Update transaction\nto UNKNOWN_FAILURE
+                activate Database
+                Database --> Server
+                deactivate Database
+                Server --> Customer: 40?, 50?
+            end
+        else Charge Failure
+            PaymentGateway --> Server:  40?, 50?
+            deactivate PaymentGateway
+
+            Server --> Database: Update transaction\nto CHARGED_FAILURE
+            activate Database
+            Database --> Server
+            deactivate Database
+
+            Server --> Customer:  40?, 50?
+        end
+    else Transaction not created
+        Database --> Server: Exception
+        deactivate Database
+        Server --> Customer:  40?
+    end
+else wallet not exists
+    Database --> Server: Exception
+    deactivate Database
+    Server --> Customer:  404
+    deactivate Server
+end
+
+deactivate Server
+@enduml
