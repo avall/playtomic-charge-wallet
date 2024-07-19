@@ -1,0 +1,5 @@
+schema:
+  $ref: '../common/Id.yaml'
+in: path
+name: account_id
+description: account id as path parameter

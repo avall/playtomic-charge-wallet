@@ -1,0 +1,22 @@
+title: WalletResponse
+type: object
+description: Wallet response
+allOf:
+  - $ref: '../models/Wallet.yaml'
+properties:
+  id:
+    $ref: '../common/Id.yaml'
+  created_at:
+    $ref: '../common/DateTime.yaml'
+  updated_at:
+    $ref: '../common/DateTime.yaml'
+required:
+  - id
+  - balance
+  - created_at
+  - updated_at
+example:
+  id: 'f674c3a4-0c6e-4c75-9152-c95f240ebea1'
+  balance: 100.50
+  created_at: '2023-05-28T14:07:17Z'
+  updated_at: '2023-05-29T18:23:09Z'

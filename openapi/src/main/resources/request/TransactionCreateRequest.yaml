@@ -1,0 +1,5 @@
+title: TransactionCreateRequest
+type: object
+description: Information needed to create a Transaction
+allOf:
+  - $ref: '../models/Transaction.yaml'

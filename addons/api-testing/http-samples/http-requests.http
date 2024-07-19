@@ -1,0 +1,57 @@
+### Create Account
+POST http://localhost:8090/v1/accounts
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json; charset=utf-8
+
+{
+  "alias": "Jandrinet",
+  "email": "alex.vall.mainou@gmail.com",
+  "first_name": "alex",
+  "last_name": "vall"
+}
+
+> {%
+  client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+  });
+%}
+
+
+### List Accounts
+GET http://localhost:8090/v1/accounts
+
+> {%
+  client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+    client.global.set("account_id", response.body.accounts[0].id);
+  });
+
+%}
+
+
+### Find Wallet by Id
+GET http://localhost:8090/v1/wallets/{{account_id}}
+
+> {%
+  client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+  });
+%}
+
+
+### Create Charge Ttransaction
+POST http://localhost:8090/v1/transactions
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json; charset=utf-8
+
+{
+  "wallet_id" : "{{account_id}}",
+  "credit_card": "4242424242424242",
+  "amount": 100.00,
+  "type": "TOPUP"
+}
+
+
+

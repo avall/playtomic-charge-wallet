@@ -1,0 +1,42 @@
+spring.profiles.active: develop
+server:
+  port: 8090
+logging:
+  level:
+    org.zalando.logbook: TRACE
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: NON_NULL
+    time-zone: UTC
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSSX
+    deserialization:
+      fail-on-unknown-properties: false
+  jpa:
+    show_sql: true
+    database: H2
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        default_schema: public
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=TRUE
+  sql:
+    init:
+      data-locations:
+        - classpath*:*.sql
+---
+spring.config.activate.on-profile: develop
+stripe.simulator.charges-uri: https://sandbox.playtomic.io/v1/stripe-simulator/charges
+stripe.simulator.refunds-uri: https://sandbox.playtomic.io/v1/stripe-simulator/payments/{payment_id}/refunds
+---
+spring.config.activate.on-profile: test
+stripe.simulator.charges-uri: http://localhost:9999
+stripe.simulator.refunds-uri: http://localhost:9999

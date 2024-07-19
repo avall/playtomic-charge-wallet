@@ -1,0 +1,6 @@
+type: string
+description: Email of entity
+maxLength: 512
+example: contact@wefox.com
+format: email
+#pattern: '^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$'

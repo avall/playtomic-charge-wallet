@@ -1,0 +1,14 @@
+title: Wallet
+type: object
+description: Wallet
+properties:
+  balance:
+    title: Wallet
+    type: number
+    format: double
+    description: Wallet balance.
+    example: 100.50
+required:
+  - balance
+example:
+  balance: 100.50

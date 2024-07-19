@@ -1,0 +1,37 @@
+title: Transaction
+type: object
+description: Transaction
+properties:
+  wallet_id:
+    $ref: '../common/Id.yaml'
+  refund_payment_id:
+    $ref: '../common/Id.yaml'
+  credit_card:
+    title: Credit card
+    description: Credit card to be charged in the transaction.
+    type: string
+    maxLength: 20
+    example: '4242424242424242'
+  type:
+    title: Transaction type
+    description: Transaction type
+    type: string
+    enum:
+      - TOPUP
+      - REFUND
+  amount:
+    title: Amount
+    type: number
+    minimum: 1
+    format: double
+    description: Amount to charge.
+    example: 100.50
+required:
+  - wallet_id
+  - type
+  - amount
+example:
+  wallet_id: 'f674c3a4-0c6e-4c75-9152-c95f240ebea1'
+  credit_card: '4242424242424242'
+  type: TOPUP
+  amount: 100.50

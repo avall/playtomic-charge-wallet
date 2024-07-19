@@ -1,0 +1,162 @@
+openapi: 3.0.3
+info:
+  title: Wallet API
+  description: API to manage the Wallet
+  version: v1
+  license:
+    name: private
+    url: 'https://'
+  contact:
+    name: Playtomic
+    email: developer.support@playtomic.com
+    url: 'https://www.playtomic.com/support'
+servers:
+  - description: Playtomic Internal Gateway
+    url: 'https://playtomic-server-api-gateway.{environment}.eu-central-1.retail.playtomic.cloud'
+    variables:
+      environment:
+        default: dev
+        enum:
+          - dev
+          - stg
+          - pro
+paths:
+  /v1/accounts:
+    post:
+      operationId: create-account
+      tags:
+        - account-v1
+      summary: Create account and Wallet. Every account has only one wallet.
+      description: Returns the created account.
+      requestBody:
+        $ref: '#/components/requestBodies/AccountCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/AccountResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+    get:
+      operationId: get-accounts
+      tags:
+        - account-v1
+      summary: GET all accounts.
+      description: Returns the list of accounts.
+      responses:
+        '200':
+          $ref: '#/components/responses/AccountListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+  /v1/wallets/{account_id}:
+    get:
+      operationId: get-wallet-by-id
+      tags:
+        - wallet-v1
+      summary: Create account and Wallet. Every account has only one wallet.
+      description: Returns the created account.
+      parameters:
+        - $ref: '#/components/parameters/AccountIdPathParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/WalletResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+  /v1/transactions:
+    post:
+      operationId: create-transaction
+      tags:
+        - transaction-v1
+      summary: Create transaction using credit card & wallet (account_id). Every account has only one wallet. The wallet id and account id are equal.
+      description: Charge the credit card, update the balance and returns the created transaction.
+      requestBody:
+        $ref: '#/components/requestBodies/TransactionCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/TransactionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+components:
+  schemas:
+    AccountCreateRequest:
+      $ref: "./request/AccountCreateRequest.yaml"
+    TransactionCreateRequest:
+      $ref: "./request/TransactionCreateRequest.yaml"
+    AccountResponse:
+      $ref: "./response/AccountResponse.yaml"
+    AccountListResponse:
+      $ref: "./response/AccountListResponse.yaml"
+    WalletResponse:
+      $ref: "./response/WalletResponse.yaml"
+    TransactionResponse:
+      $ref: "./response/TransactionResponse.yaml"
+    Error:
+      $ref: './common/Error.yaml'
+  parameters:
+    AccountIdPathParam:
+      $ref: './parameters/AccountIdPathParam.yaml'
+  requestBodies:
+    AccountCreateRequest:
+      required: true
+      description: Mandatory request body to create account
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountCreateRequest'
+    TransactionCreateRequest:
+      required: true
+      description: Mandatory request body to create a transaction
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransactionCreateRequest'
+  responses:
+    WalletResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WalletResponse'
+    AccountResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountResponse'
+    AccountListResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountListResponse'
+    TransactionResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransactionResponse'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFoundResponse:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+tags:
+  - name: transaction-v1
+    description: Version 1 for POST /transactions.
+  - name: account-v1
+    description: Version 1 for POST /accounts & GET /accounts.
+  - name: wallet-v1
+    description: Version 1 for GET /wallets.
