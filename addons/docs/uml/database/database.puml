@@ -1,0 +1,40 @@
+@startuml
+!include ../style.puml
+skinparam linetype ortho
+
+entity Account {
+  id: UUID
+  email: String
+  alias: String
+  firstName: String
+  lastName: String
+  updatedAt: Date
+  createdAt: Date
+}
+
+entity Wallet {
+  id: UUID
+  balance: Number
+  updatedAt: Date
+  createdAt: Date
+}
+
+entity Transaction {
+  id: UUID
+  payment_id: UUID
+  wallet_id: UUID
+  type: String
+  status: String
+  creditCard: String
+  amount: Number
+  updatedAt: Date
+  createdAt: Date
+}
+
+
+
+Account ||..d.|| Wallet
+Wallet ||...r...o{ Transaction
+Transaction ||..d.o{ TransactionLog
+
+@enduml

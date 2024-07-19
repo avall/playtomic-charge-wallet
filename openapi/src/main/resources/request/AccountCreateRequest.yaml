@@ -1,0 +1,10 @@
+title: AccountCreateRequest
+type: object
+description: Information needed to create an Client
+allOf:
+  - $ref: '../models/Account.yaml'
+properties:
+  id:
+    $ref: '../common/Id.yaml'
+example:
+  id: '033e4ff1-c5ce-465f-ac51-1d167398bb84'

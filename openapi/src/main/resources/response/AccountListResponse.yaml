@@ -1,0 +1,8 @@
+title: AccountListResponse
+type: object
+description: Account list
+properties:
+  accounts:
+    type: array
+    items:
+      $ref: './AccountResponse.yaml'

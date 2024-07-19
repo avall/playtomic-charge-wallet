@@ -1,0 +1,44 @@
+@startuml
+
+!include ../style.puml
+skinparam linetype ortho
+top to bottom direction
+
+skinparam package<<Layout>> {
+  borderColor Transparent
+  backgroundColor Transparent
+  fontColor Transparent
+  stereotypeFontColor Transparent
+}
+
+class Account {
+  Integer id
+  String email
+}
+
+class Wallet {
+  Integer id
+  Number balance
+}
+
+class Transaction {
+  Integer id
+  Integer account_id
+  String creditCard
+  String status
+  String type
+  Number amount
+}
+
+class TransactionLog {
+  Integer id
+  Integer transaction_id
+  String response
+}
+
+Account "1" o--d- "1" Wallet
+Wallet "1" o--d- "0..*" Transaction
+Transaction "1" o--r- "0..*" TransactionLog
+
+
+@enduml
