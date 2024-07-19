@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.zalando.logbook.spring.LogbookClientHttpRequestInterceptor;
 
 /**
  * Handles the communication with Stripe.
@@ -38,12 +39,20 @@ public class StripeAdapter implements ChargeCreditCardOutPort, RefundPaymentOutP
 
   public StripeAdapter(@Value("${stripe.simulator.charges-uri}") @NonNull URI chargesUri,
       @Value("${stripe.simulator.refunds-uri}") @NonNull URI refundsUri,
-      @NonNull RestTemplateBuilder restTemplateBuilder) {
+      @NonNull RestTemplateBuilder restTemplateBuilder,
+      @NonNull LogbookClientHttpRequestInterceptor logbookClientHttpRequestInterceptor) {
+
+//    final HttpClient httpClient = HttpClientBuilder.create()
+//        .setConnectionManager(new PoolingHttpClientConnectionManager()).build();
+
     this.chargesUri = chargesUri;
     this.refundsUri = refundsUri;
     this.restTemplate =
         restTemplateBuilder
+            .additionalInterceptors(logbookClientHttpRequestInterceptor)
             .errorHandler(new StripeRestTemplateResponseErrorHandler())
+//            .requestFactory(() -> new BufferingClientHttpRequestFactory(
+//                new HttpComponentsClientHttpRequestFactory(httpClient)))
             .build();
   }
 

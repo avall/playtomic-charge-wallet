@@ -4,6 +4,8 @@
 Challenge for a wallet handle:
 - Get a wallet by `ìd`.
 - TopUp money in this same wallet charging a credit card via third party provider (mocked stripe).
+- We have not added the Log entity. Micrometer, Prometheus & ELK + Grafana could be an option to improve observability & monitoring. 
+- This solution could be improved using a Message Broker with CDC (Change Data Capture - Debezium) as Outbox Pattern & Coreography and DLQ's to recover the system.
 
 ### Assumptions
 - When the account is created, the wallet is available.
@@ -91,7 +93,7 @@ User Name: sa
 ````
 
 
-## Run the Project
+## Package & Run the Project
 ### from your local JVM
 from CLI run this command to create the package:
 ````
@@ -104,5 +106,5 @@ Then to run:
 ## Testing
 - The integration test is implemented into the class `WalletControllerIT`.
 - Once the micro is running we can run a manual test using:
-  - From `ìntellij` using `http` feature. Go to folder `./addons/api-testing/http-samples` & click on the file (`http-requests.http`) with extension `http`.
+  - From `ìntellij` using `http client` feature (plugin). Go to folder `./addons/api-testing/http-samples` & click on the file (`http-requests.http`) with extension `http`.
   - From `postman` import the collection `./addons/api-testing/postman/Playtomic-Challenge.postman_collection.json`. 
