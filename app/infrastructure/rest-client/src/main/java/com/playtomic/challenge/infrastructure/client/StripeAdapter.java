@@ -9,6 +9,7 @@ import com.playtomic.challenge.domain.model.Payment;
 import com.playtomic.challenge.infrastructure.client.dto.PaymentDto;
 import com.playtomic.challenge.infrastructure.client.exception.StripeServiceException;
 import com.playtomic.challenge.infrastructure.client.handler.StripeRestTemplateResponseErrorHandler;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.zalando.logbook.spring.LogbookClientHttpRequestInterceptor;
 
@@ -42,17 +44,12 @@ public class StripeAdapter implements ChargeCreditCardOutPort, RefundPaymentOutP
       @NonNull RestTemplateBuilder restTemplateBuilder,
       @NonNull LogbookClientHttpRequestInterceptor logbookClientHttpRequestInterceptor) {
 
-//    final HttpClient httpClient = HttpClientBuilder.create()
-//        .setConnectionManager(new PoolingHttpClientConnectionManager()).build();
-
     this.chargesUri = chargesUri;
     this.refundsUri = refundsUri;
     this.restTemplate =
         restTemplateBuilder
             .additionalInterceptors(logbookClientHttpRequestInterceptor)
             .errorHandler(new StripeRestTemplateResponseErrorHandler())
-//            .requestFactory(() -> new BufferingClientHttpRequestFactory(
-//                new HttpComponentsClientHttpRequestFactory(httpClient)))
             .build();
   }
 
@@ -75,7 +72,7 @@ public class StripeAdapter implements ChargeCreditCardOutPort, RefundPaymentOutP
       return Payment.builder()
           .id(dto.getId())
           .build();
-    } catch (Exception e) {
+    } catch (ResourceAccessException | StripeServiceException e) {
       throw new PaymentGatewayException(e.getMessage(),
           CommonErrorMessage.PAYMENT_GATEWAY_ERROR.getCode());
     }
@@ -89,7 +86,7 @@ public class StripeAdapter implements ChargeCreditCardOutPort, RefundPaymentOutP
     // Object.class because we don't read the body here.
     try {
       restTemplate.postForEntity(refundsUri.toString(), null, Object.class, paymentId);
-    } catch (Exception e) {
+    } catch (ResourceAccessException | StripeServiceException e) {
       throw new PaymentGatewayException(e.getMessage(),
           CommonErrorMessage.PAYMENT_GATEWAY_ERROR.getCode());
     }

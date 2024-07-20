@@ -49,7 +49,7 @@ Content-Type: application/json; charset=utf-8
 {
   "wallet_id" : "{{account_id}}",
   "credit_card": "4242424242424242",
-  "amount": 100.00,
+  "amount": 2.00,
   "type": "TOPUP"
 }
 

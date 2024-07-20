@@ -125,4 +125,25 @@ class WalletControllerIT {
         .contentType("application/json");
   }
 
+  @Test
+  void postChargeTransaction422() {
+    given()
+        .body("""
+                {
+                  "wallet_id" : "033e4ff1-c5ce-465f-ac51-1d167398bb84",
+                  "credit_card": "4242424242424242",
+                  "amount": 1.00,
+                  "type": "TOPUP"
+                }
+            """)
+        .contentType("application/json")
+        .port(port)
+        .when()
+        .post("/v1/transactions")
+        .then()
+        .statusCode(400)
+        .contentType("application/json");
+  }
+
+
 }
