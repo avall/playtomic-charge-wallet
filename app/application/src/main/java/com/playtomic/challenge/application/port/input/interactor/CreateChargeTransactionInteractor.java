@@ -70,11 +70,13 @@ public class CreateChargeTransactionInteractor
       transaction.setStatus(TransactionStatus.CHARGE_FAILURE);
       updateTransactionUseCase.execute(UpdateTransactionUseCase.InputValues.builder()
               .transaction(transaction).build());
+      throw e;
     } catch (Exception e) {
       // change status to FAILED
       transaction.setStatus(TransactionStatus.UNKNOWN_FAILURE);
       updateTransactionUseCase.execute(UpdateTransactionUseCase.InputValues.builder()
                   .transaction(transaction).build());
+      throw e;
     }
 
     return OutputValues.builder().transaction(transaction).build();

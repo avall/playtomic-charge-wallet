@@ -13,7 +13,7 @@ Content-Type: application/json; charset=utf-8
 
 > {%
   client.test("Request executed successfully", function() {
-    client.assert(response.status === 200, "Response status is not 200");
+    client.assert(response.status === 201, "Response status is not 201");
   });
 %}
 
@@ -49,9 +49,14 @@ Content-Type: application/json; charset=utf-8
 {
   "wallet_id" : "{{account_id}}",
   "credit_card": "4242424242424242",
-  "amount": 100.00,
+  "amount": 2.00,
   "type": "TOPUP"
 }
 
+> {%
+  client.test("Request executed successfully", function() {
+    client.assert(response.status === 201, "Response status is not 201");
+  });
+%}
 
 
