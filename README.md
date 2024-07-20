@@ -5,7 +5,11 @@ Challenge for a wallet handle:
 - Get a wallet by `ìd`.
 - TopUp money in this same wallet charging a credit card via third party provider (mocked stripe).
 - We have not added the Log entity. Micrometer, Prometheus & ELK + Grafana could be an option to improve observability & monitoring. 
-- This solution could be improved using a Message Broker with CDC (Change Data Capture - Debezium) as Outbox Pattern & Coreography and DLQ's to recover the system.
+- This solution could be improved:
+  - Using Webflux to not block the main thread.
+  - using a Message Broker with:
+    - CDC (Change Data Capture - Debezium) as Outbox Pattern 
+    - Coreography & DLQ's to recover the system.
 
 ### Assumptions
 - When the account is created, the wallet is available.
@@ -68,17 +72,14 @@ Body:
     ![](addons/docs/uml/architecture/architecture.svg)
 - The @Interactor (decorator) is useful to avoid the Spring Framework dependencies in the Application layer.
 
-## Compile & execute unit/integration test
-From cli run this command
-````
-./mvnw clean verify -T 2
-````
-Missing: create Git action to validate Pull Request (pull review).
-
 ## Domain model
 - We assume the `Account id` is the same than the `Wallet id`.
 - The global domain model (tenant is not reflected) managed in this micro is:\
   ![](addons/docs/uml/domain-models/domain.svg)
+
+## (UML) Sequence diagram
+- We shoe here the sequence diagram for the use case to charge the Credit Card & update the wallet .
+  ![](addons/docs/uml/sequence-diagram/sync.svg)
 
 
 ## Database
@@ -91,6 +92,13 @@ Then you can introduce these connection parameters:
 JDBC URL:  jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=TRUE
 User Name: sa
 ````
+
+## Compile & execute unit/integration test
+From cli run this command
+````
+./mvnw clean verify -T 2
+````
+Missing: create Git action to validate Pull Request (pull review).
 
 
 ## Package & Run the Project
