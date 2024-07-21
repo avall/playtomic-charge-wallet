@@ -72,17 +72,17 @@ Body:
     ![](addons/docs/uml/architecture/architecture.svg)
 - The @Interactor (decorator) is useful to avoid the Spring Framework dependencies in the Application layer.
 
-## Domain model
+### Domain model
 - We assume the `Account id` is the same than the `Wallet id`.
 - The global domain model (tenant is not reflected) managed in this micro is:\
   ![](addons/docs/uml/domain-models/domain.svg)
 
-## (UML) Sequence diagram
+### (UML) Sequence diagram
 - We shoe here the sequence diagram for the use case to charge the Credit Card & update the wallet .
   ![](addons/docs/uml/sequence-diagram/sync.svg)
 
 
-## Database
+### Database
 - The database model of `wallet` managed in this micro is:\
   ![](addons/docs/uml/database/database.svg)
 - The best option to create the database should be use `liquibase` (versioned & incremental schema modifications) but for this challenge we have used `hibernate` feature. \
@@ -92,6 +92,8 @@ Then you can introduce these connection parameters:
 JDBC URL:  jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=TRUE
 User Name: sa
 ````
+ 
+- There is sample data (`data.sql) uploaded when app starts.
 
 ## Compile & execute unit/integration test
 From cli run this command
