@@ -6,7 +6,7 @@ Challenge for a wallet handle:
 - TopUp money in this same wallet charging a credit card via third party provider (mocked stripe).
 - We have not added the Log entity. Micrometer, Prometheus & ELK + Grafana could be an option to improve observability & monitoring. 
 - This solution could be improved:
-  - Using Webflux to not block the main thread.
+  - Using Webflux (reactive) as non blocking solution.
   - using a Message Broker with:
     - CDC (Change Data Capture - Debezium) as Outbox Pattern 
     - Coreography & DLQ's to recover the system.
