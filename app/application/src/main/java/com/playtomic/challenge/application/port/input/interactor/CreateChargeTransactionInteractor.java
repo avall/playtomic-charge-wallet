@@ -47,7 +47,7 @@ public class CreateChargeTransactionInteractor
     transaction = createTransactionOutPort.createTransaction(transaction);
 
     try {
-        // Charge or refund credit card.
+        // Charge credit card.
         Payment payment = chargeCreditCardUseCase.execute(
                 ChargeCreditCardUseCase.InputValues.builder()
                     .creditCardNumber(transaction.getCreditCard())
