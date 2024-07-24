@@ -74,7 +74,7 @@ Body:
 
 ### Domain model
 - We assume the `Account id` is the same than the `Wallet id`.
-- The global domain model (tenant is not reflected) managed in this micro is:\
+- The global domain model managed in this micro is:\
   ![](addons/docs/uml/domain-models/domain.svg)
 
 ### (UML) Sequence diagram
