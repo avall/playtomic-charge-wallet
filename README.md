@@ -12,7 +12,7 @@ Challenge for a wallet handle:
     - Coreography & DLQ's to recover the system.
 
 ### Assumptions
-- When the account is created, the wallet is available.
+- When the account is created, the wallet is also created.
 - Every account has only one wallet. It means the `ìd` of the Account and the `ìd` of the wallet are equal.
 - Explanation of operations:
   - Transactions
