@@ -54,25 +54,26 @@ public class CreateChargeTransactionInteractor
                     .amount(transaction.getAmount()).build()).getPayment();
         log.info("Payment successful: {}", payment);
 
+        // Update balance
         updateWalletBalanceUseCase.execute(
             UpdateWalletBalanceUseCase.InputValues.builder().amount(transaction.getAmount())
                 .id(transaction.getWallet().id()).build());
         log.info("Update balance successful: {}", payment);
 
-        // save payment & change status to COMPLETED
+        // update transaction & change status to COMPLETED
         transaction.setStatus(TransactionStatus.COMPLETED);
         transaction.setPaymentId(payment.id());
         updateTransactionUseCase.execute(UpdateTransactionUseCase.InputValues.builder()
                     .transaction(transaction).build());
 
     } catch (PaymentGatewayException e) {
-      // change status to FAILED
+      // change status to CHARGE_FAILURE
       transaction.setStatus(TransactionStatus.CHARGE_FAILURE);
       updateTransactionUseCase.execute(UpdateTransactionUseCase.InputValues.builder()
               .transaction(transaction).build());
       throw e;
     } catch (Exception e) {
-      // change status to FAILED
+      // change status to UNKNOWN_FAILURE
       transaction.setStatus(TransactionStatus.UNKNOWN_FAILURE);
       updateTransactionUseCase.execute(UpdateTransactionUseCase.InputValues.builder()
                   .transaction(transaction).build());
