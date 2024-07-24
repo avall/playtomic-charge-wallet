@@ -12,6 +12,7 @@ Challenge for a wallet handle:
     - Coreography & DLQ's to recover the system.
 
 ### Assumptions
+- We are following the API-first approach.
 - When the account is created, the wallet is also created.
 - Every account has only one wallet. It means the `ìd` of the Account and the `ìd` of the wallet are equal.
 - Explanation of operations:
@@ -78,7 +79,7 @@ Body:
   ![](addons/docs/uml/domain-models/domain.svg)
 
 ### (UML) Sequence diagram
-- We shoe here the sequence diagram for the use case to charge the Credit Card & update the wallet .
+- We show here the sequence diagram for the use case to charge the Credit Card & update the wallet .
   ![](addons/docs/uml/sequence-diagram/sync.svg)
 
 
