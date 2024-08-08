@@ -34,29 +34,27 @@ public class TransactionController implements TransactionV1Api, UseCaseExecutorP
     this.useCaseCharge = useCaseCharge;
     this.useCaseRefund = useCaseRefund;
     this.useCases  = Map.of(
-        TransactionType.TOPUP, dto -> {
-          return functional(
+        TransactionType.TOPUP, dto ->
+           functional(
               CreateChargeTransactionUseCase.InputValues
                   .builder()
                   .transaction(mapper.toDomain(dto))
                   .build(),
               useCaseCharge,
               output -> ResponseEntity.status(201).body(mapper.toDto(output.getTransaction())
-          ));
-        },
-        TransactionType.REFUND, dto -> {
-          return functional(
+          )),
+        TransactionType.REFUND, dto ->
+           functional(
               CreateChargeTransactionUseCase.InputValues
                   .builder()
                   .transaction(mapper.toDomain(dto))
                   .build(),
               useCaseCharge,
               output -> ResponseEntity.status(201).body(mapper.toDto(output.getTransaction())
-          ));
-        }
+          ))
     );
-
   }
+
   @Override
   public ResponseEntity<TransactionResponseDto> createTransaction(
       TransactionCreateRequestDto transactionCreateRequestDto) {
