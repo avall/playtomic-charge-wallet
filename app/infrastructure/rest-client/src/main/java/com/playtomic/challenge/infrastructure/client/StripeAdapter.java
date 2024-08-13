@@ -73,7 +73,7 @@ public class StripeAdapter implements ChargeCreditCardOutPort, RefundPaymentOutP
           .id(dto.getId())
           .build();
     } catch (ResourceAccessException | StripeServiceException e) {
-      throw new PaymentGatewayException(e.getMessage(),
+      throw new PaymentGatewayException("Error calling out the Payment Gateway: " + e.getMessage(),
           CommonErrorMessage.PAYMENT_GATEWAY_ERROR.getCode());
     }
   }

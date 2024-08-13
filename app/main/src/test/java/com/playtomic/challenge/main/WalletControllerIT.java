@@ -1,17 +1,51 @@
 package com.playtomic.challenge.main;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+import com.github.tomakehurst.wiremock.http.Request;
 import static io.restassured.RestAssured.given;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 
+@Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 class WalletControllerIT {
 
   public static final int BRAND_ID = 1;
   public static final int PRODUCT_ID = 35455;
 
+  private static WireMockServer mockServer;
   @LocalServerPort private int port;
+
+  private static void requestReceived(
+      Request inRequest, com.github.tomakehurst.wiremock.http.Response inResponse) {
+    log.info("WireMock request at URL: {}", inRequest.getAbsoluteUrl());
+    log.info("WireMock request headers: \n{}", inRequest.getHeaders());
+    log.info("WireMock response body: \n{}", inResponse.getBodyAsString());
+    log.info("WireMock response headers: \n{}", inResponse.getHeaders());
+  }
+
+  @BeforeAll
+  public static void beforeAll() {
+    mockServer = new WireMockServer(9999);
+    WireMock.configureFor("localhost", 9999);
+    mockServer.addMockServiceRequestListener(WalletControllerIT::requestReceived);
+    mockServer.start();
+  }
+
+  @AfterAll
+  public static void afterAll() {
+    mockServer.stop();
+  }
+
 
   @Test
   void postAccountOk() {
@@ -87,6 +121,19 @@ class WalletControllerIT {
 
   @Test
   void postChargeTransactionOk() {
+    mockServer.stubFor(
+        WireMock.post(urlPathMatching("/v1/stripe-simulator/charges"))
+            .willReturn(
+                aResponse()
+                    .withStatus(200)
+                    .withHeader("Content-Type", "application/json")
+                    .withBody(
+                        """ 
+                                  {
+                                      "id": "31fbc2c9-25dc-4a4a-a790-019caee4ced8"
+                                  }
+                            """)));
+
     given()
         .body("""
                 {
@@ -106,7 +153,7 @@ class WalletControllerIT {
   }
 
   @Test
-  void postChargeTransactionNotFound() {
+  void postChargeTransactionWhenWalletNotFound() {
     given()
         .body("""
                 {
@@ -127,6 +174,12 @@ class WalletControllerIT {
 
   @Test
   void postChargeTransaction422() {
+    mockServer.stubFor(
+        WireMock.post(urlPathMatching("/v1/stripe-simulator/charges"))
+            .willReturn(
+                aResponse()
+                    .withStatus(422)));
+
     given()
         .body("""
                 {
