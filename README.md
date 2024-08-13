@@ -1,4 +1,6 @@
 # Wallet Service Application
+This is the repository with the challenge description for the Playtomic interview. The position is for Senior Backend Engineer.
+https://github.com/syltek/technical-test-backend/tree/exercise-2024-sql
 
 ## Project Description
 Challenge for a wallet handle:
